@@ -1,0 +1,12 @@
+#!/bin/bash
+curl -s "https://djari.ru" \
+| grep 'vike_pageContext' \
+| sed 's/.*<script[^>]*>//' \
+| sed 's/<\/script>.*//' \
+| jq '.initialStoreState.products.all' \
+| jq '[.[] | {
+  name: .name,
+  price: (.parameters[0].cost | tonumber)
+}]' > menu.json
+
+echo 'результат сохранен в menu.json'
